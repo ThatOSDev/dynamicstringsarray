@@ -8,12 +8,12 @@
 char** strings = NULL;
 int stringsIndex = 0;
 
-int getTotalStrings()
+int that_getTotalStrings()
 {
     return stringsIndex;
 }
 
-void addString(const char* str)
+void that_addString(const char* str)
 {
     int len = strnlen(str, 4096);
     stringsIndex++;
@@ -31,12 +31,12 @@ void addString(const char* str)
     strncpy(strings[stringsIndex - 1], str, len + 1);
 }
 
-char* getString(int strNumber)
+char* that_getString(int strNumber)
 {
     return strings[strNumber];
 }
 
-void printAllStrings()
+void that_printAllStrings()
 {
     for(int t = 0; t < stringsIndex; t++)
     {
@@ -44,7 +44,7 @@ void printAllStrings()
     }
 }
 
-void removeString(int strNumber)
+void that_removeString(int strNumber)
 {
     if(strNumber < 1)
     {
@@ -99,7 +99,7 @@ void removeString(int strNumber)
     stringsIndex = newIndex;
 }
 
-void cleanupStrings()
+void that_cleanupStrings()
 {
     for(int t = 0; t < stringsIndex; t++)
     {

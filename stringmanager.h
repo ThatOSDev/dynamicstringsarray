@@ -2,11 +2,11 @@
 #ifndef STRING_MANAGER_H
 #define STRING_MANAGER_H
 
-int   getTotalStrings(void);
-void  addString(const char* str);
-char* getString(int strNumber);
-void  printAllStrings(void);
-void  removeString(int strNumber);
-void  cleanupStrings(void);
+int   that_getTotalStrings(void);
+void  that_addString(const char* str);
+char* that_getString(int strNumber);
+void  that_printAllStrings(void);
+void  that_removeString(int strNumber);
+void  that_cleanupStrings(void);
 
 #endif // STRING_MANAGER_H
