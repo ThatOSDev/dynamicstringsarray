@@ -1,6 +1,4 @@
 
-#include "stringmanager.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -99,9 +97,9 @@ void that_removeString(int strNumber)
     stringsIndex = newIndex;
 }
 
-void that_cleanupStrings()
+void that_cleanupStrings() // Cleans out the strings, starting with the last one.
 {
-    for(int t = 0; t < stringsIndex; t++)
+    for(int t = (stringsIndex - 1); t >=0; t--)
     {
         free(strings[t]);
     }
