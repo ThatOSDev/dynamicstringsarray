@@ -1,26 +1,25 @@
 
 #include "stringmanager.h"
-#include <stdio.h>
 
 int main()
 {
-    that_addString("First");
-    that_addString("Second");
-    that_addString("Third");
+    that_addString("first first");
 
-    for(int t = 0; t < that_getTotalStrings(); t++)
-    {
-        printf("%s\n", that_getString(t));
-    }
+    that_addString("second second");
 
-    printf("\n");
+    that_addString("third third");
 
-    that_removeString(2);
+    that_addString("fourth fourth");
 
-    for(int t = 0; t < that_getTotalStrings(); t++)
-    {
-        printf("%s\n", that_getString(t));
-    }
+    that_addString("fifth fifth");
+
+    that_addString("sixth sixth");
+
+    that_printAllStrings();
+
+    that_removeString(4);
+
+    that_printAllStrings();
 
     that_cleanupStrings();
 

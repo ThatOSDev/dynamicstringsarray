@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-char** strings = NULL;
-int stringsIndex = 0;
+char** strings            = NULL;
+unsigned int stringsIndex = 0;
 
-int that_getTotalStrings()
+unsigned int that_getTotalStrings()
 {
     return stringsIndex;
 }
@@ -14,35 +14,41 @@ int that_getTotalStrings()
 void that_addString(const char* str)
 {
     int len = strnlen(str, 4096);
-    stringsIndex++;
 
     if(strings == NULL)
     {
-        strings = malloc(stringsIndex);
-    } else
+        strings = malloc(sizeof *strings);
+    }
+    else
     {
-        strings = realloc(strings, stringsIndex);
+        strings = realloc(strings, sizeof *strings * (stringsIndex + 1));
     }
 
-    strings[stringsIndex - 1] = malloc(len + 1);
+    strings[stringsIndex] = malloc(len + 1); // The +1 so we can NULL Terminate.
 
-    strncpy(strings[stringsIndex - 1], str, len + 1);
+    strncpy(strings[stringsIndex], str, len); // Copy str to the string.
+
+    strings[stringsIndex][len] = 0; // NULL Terminate each string here.
+
+    stringsIndex++;
 }
 
-char* that_getString(int strNumber)
+char* that_getString(unsigned int strNumber)
 {
     return strings[strNumber];
 }
 
 void that_printAllStrings()
 {
-    for(int t = 0; t < stringsIndex; t++)
+    printf("\n-------STRINGS LIST-----------\n");
+    printf("%d\n", stringsIndex);
+    for(unsigned int t = 0; t < stringsIndex; t++)
     {
-        printf("%s\n", strings[t]);
+        printf("DISPLAYING STRING : #%d - %s\n", t, strings[t]);
     }
 }
 
-void that_removeString(int strNumber)
+void that_removeString(unsigned int strNumber)
 {
     if(strNumber < 1)
     {
@@ -56,39 +62,45 @@ void that_removeString(int strNumber)
 
     // remove string from numbered position and copy from position to new strings
     char** tempStrings = NULL;
-    tempStrings = malloc(stringsIndex - 1);
-    int newIndex = 0;
+    tempStrings = malloc(sizeof *tempStrings);
+    unsigned int newIndex = 0;
     if(stringsIndex > 0)
     {
-        for(int t = 0; t < stringsIndex; t++)
+        for(unsigned int t = 0; t < stringsIndex; t++)
         {
             if(t != (strNumber - 1))
             {
                 int len = strnlen(strings[t], 4096);
+                tempStrings = realloc(tempStrings, sizeof *tempStrings * (t + 1));
                 tempStrings[newIndex] = malloc(len + 1);
-                strncpy(tempStrings[newIndex], strings[t], len + 1);
+                strncpy(tempStrings[newIndex], strings[t], len);
+                tempStrings[newIndex][len] = 0;
                 newIndex++;
+            } else {
+                printf("\nREMOVING STRING #%d : %s\n", t + 1, strings[t]);
             }
         }
     }
 
-    for(int t = 0; t < stringsIndex; t++)
+    for(unsigned int t = 0; t < stringsIndex; t++)
     {
         free(strings[t]);
     }
     free(strings);
 
     // COPY from tempStrings to strings
-    strings = malloc(newIndex);
+    strings = malloc(sizeof *strings);
 
-    for(int t = 0; t < newIndex; t++)
+    for(unsigned int t = 0; t < newIndex; t++)
     {
+        strings = realloc(strings, sizeof *strings * (t + 1));
         int len = strnlen(tempStrings[t], 4096);
         strings[t] = malloc(len + 1);
-        strncpy(strings[t], tempStrings[t], len + 1);
+        strncpy(strings[t], tempStrings[t], len);
+        strings[t][len] = 0;
     }
 
-    for(int t = 0; t < newIndex; t++)
+    for(unsigned int t = 0; t < newIndex; t++)
     {
         free(tempStrings[t]);
     }
@@ -97,12 +109,17 @@ void that_removeString(int strNumber)
     stringsIndex = newIndex;
 }
 
-void that_cleanupStrings() // Cleans out the strings, starting with the last one.
+void that_cleanupStrings() // Cleans out the strings.
 {
-    for(int t = (stringsIndex - 1); t >=0; t--)
+    printf("\n-------CLEANING LIST-----------\n");
+    printf("TOTAL STRINGS : %d\n", stringsIndex);
+    for(unsigned int t = 0; t < stringsIndex; t++)
     {
+        printf("\nSTRING : #%d - %s\n", t, strings[t]);
         free(strings[t]);
     }
+
+    printf("\nFREEING strings\n");
     free(strings);
 }
 
