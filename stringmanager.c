@@ -1,8 +1,13 @@
 
 #include <stdio.h>
+#include <stdint.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
+#define MAX_STRING_LENGTH 4096
+
+char* charStr             = NULL;
 char** strings            = NULL;
 unsigned int stringsIndex = 0;
 
@@ -11,9 +16,58 @@ unsigned int that_getTotalStrings()
     return stringsIndex;
 }
 
-void that_addString(const char* str)
+
+void that_addString(const char* txt, ...)
 {
-    int len = strnlen(str, 4096);
+	if(charStr != NULL)
+    {
+        free(charStr);
+    }
+	int len = strnlen(txt, MAX_STRING_LENGTH);
+	charStr = malloc(sizeof(char) * (len + 1));
+
+	va_list args;
+	va_start(args, txt);
+	uint64_t j = 0;
+	uint64_t i = 0;
+
+	for(; txt[i] != '\0'; i++)
+	{
+		if(txt[i] == '%')
+		{
+			i++;
+			switch(txt[i])
+			{
+				case 's':
+				{
+				    j = (i - 1);
+					char* varString = va_arg(args, char*);
+					int len2 = strnlen(varString, MAX_STRING_LENGTH);
+					charStr = realloc(charStr, sizeof(char) * len2);
+                    for(int t = 0; t < len2; t++)
+                    {
+                        charStr[j] = varString[t];
+                        j++;
+                    }
+					break;
+				}
+			}
+		} else {
+		    if(txt[i] != '\n')
+            {
+                charStr[i] = txt[i];
+            }
+		}
+	}
+
+	va_end(args);
+
+	if(j == 0)
+    {
+        charStr[i] = '\0';
+    } else {
+        charStr[j] = '\0';
+    }
 
     if(strings == NULL)
     {
@@ -24,9 +78,11 @@ void that_addString(const char* str)
         strings = realloc(strings, sizeof *strings * (stringsIndex + 1));
     }
 
+    len = strnlen(charStr, MAX_STRING_LENGTH);
+
     strings[stringsIndex] = malloc(len + 1); // The +1 so we can NULL Terminate.
 
-    strncpy(strings[stringsIndex], str, len); // Copy str to the string.
+    strncpy(strings[stringsIndex], charStr, len); // Copy charStr to the string.
 
     strings[stringsIndex][len] = 0; // NULL Terminate each string here.
 
@@ -41,7 +97,6 @@ char* that_getString(unsigned int strNumber)
 void that_printAllStrings()
 {
     printf("\n-------STRINGS LIST-----------\n");
-    printf("%d\n", stringsIndex);
     for(unsigned int t = 0; t < stringsIndex; t++)
     {
         printf("DISPLAYING STRING : #%d - %s\n", t, strings[t]);
@@ -70,7 +125,7 @@ void that_removeString(unsigned int strNumber)
         {
             if(t != (strNumber - 1))
             {
-                int len = strnlen(strings[t], 4096);
+                int len = strnlen(strings[t], MAX_STRING_LENGTH);
                 tempStrings = realloc(tempStrings, sizeof *tempStrings * (t + 1));
                 tempStrings[newIndex] = malloc(len + 1);
                 strncpy(tempStrings[newIndex], strings[t], len);
@@ -94,7 +149,7 @@ void that_removeString(unsigned int strNumber)
     for(unsigned int t = 0; t < newIndex; t++)
     {
         strings = realloc(strings, sizeof *strings * (t + 1));
-        int len = strnlen(tempStrings[t], 4096);
+        int len = strnlen(tempStrings[t], MAX_STRING_LENGTH);
         strings[t] = malloc(len + 1);
         strncpy(strings[t], tempStrings[t], len);
         strings[t][len] = 0;
@@ -115,7 +170,7 @@ void that_cleanupStrings() // Cleans out the strings.
     printf("TOTAL STRINGS : %d\n", stringsIndex);
     for(unsigned int t = 0; t < stringsIndex; t++)
     {
-        printf("\nSTRING : #%d - %s\n", t, strings[t]);
+        printf("STRING : #%d - %s\n", t, strings[t]);
         free(strings[t]);
     }
 
