@@ -16,7 +16,6 @@ unsigned int that_getTotalStrings()
     return stringsIndex;
 }
 
-
 void that_addString(const char* txt, ...)
 {
 	if(charStr != NULL)
@@ -43,7 +42,7 @@ void that_addString(const char* txt, ...)
 				    j = (i - 1);
 					char* varString = va_arg(args, char*);
 					int len2 = strnlen(varString, MAX_STRING_LENGTH);
-					charStr = realloc(charStr, sizeof(char) * len2);
+					charStr = realloc(charStr, len + len2 + 1);
                     for(int t = 0; t < len2; t++)
                     {
                         charStr[j] = varString[t];
@@ -126,7 +125,7 @@ void that_removeString(unsigned int strNumber)
             if(t != (strNumber - 1))
             {
                 int len = strnlen(strings[t], MAX_STRING_LENGTH);
-                tempStrings = realloc(tempStrings, sizeof *tempStrings * (t + 1));
+                tempStrings = realloc(tempStrings, sizeof(*tempStrings) * (t + 1));
                 tempStrings[newIndex] = malloc(len + 1);
                 strncpy(tempStrings[newIndex], strings[t], len);
                 tempStrings[newIndex][len] = 0;
@@ -148,7 +147,7 @@ void that_removeString(unsigned int strNumber)
 
     for(unsigned int t = 0; t < newIndex; t++)
     {
-        strings = realloc(strings, sizeof *strings * (t + 1));
+        strings = realloc(strings, sizeof(*strings) * (t + 1));
         int len = strnlen(tempStrings[t], MAX_STRING_LENGTH);
         strings[t] = malloc(len + 1);
         strncpy(strings[t], tempStrings[t], len);

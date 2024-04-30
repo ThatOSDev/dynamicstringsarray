@@ -7,8 +7,7 @@ int main()
 
     that_addString("second second");
 
-    that_addString("third third : %s", "Adding Th");     // This length works. ( 9 )
-//    that_addString("third third : %s", "Adding This"); // TODO : Fix the parameter length issue.
+    that_addString("third third : %s", "Adding This because I can");
 
     that_addString("fourth fourth");
 
@@ -18,7 +17,7 @@ int main()
 
     that_printAllStrings();
 
-    that_removeString(4);
+    that_removeString(1);
 
     that_printAllStrings();
 
@@ -26,3 +25,7 @@ int main()
 
     return 0;
 }
+
+
+
+
