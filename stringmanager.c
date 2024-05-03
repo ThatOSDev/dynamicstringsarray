@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define MAX_STRING_LENGTH 4096
+#define MAX_LENGTH 22
 
 char* charStr             = NULL;
 char** strings            = NULL;
@@ -14,6 +15,52 @@ unsigned int stringsIndex = 0;
 unsigned int that_getTotalStrings()
 {
     return stringsIndex;
+}
+
+void printUInt64Digits(uint64_t num, uint64_t base)
+{
+	const char* digits = "0123456789ABCDEF";
+	uint64_t i = 0;
+
+	do
+	{
+		charStr[i++] = digits[num % base];
+        num /= base;
+	} while(num > 0);
+
+    charStr[i--] = '\0';
+
+	for(uint64_t j = 0; j < i; j++, i--)
+	{
+		char   temp = charStr[i];
+		charStr[i]  = charStr[j];
+		charStr[j]  = temp;
+	}
+}
+
+void printIntDigits(int32_t num)
+{
+	const char* digits = "0123456789";
+	uint64_t i = 0;
+	int negative = (num < 0);
+	if(negative) {num = -num;}
+
+	do
+	{
+		charStr[i++] = digits[num % 10];
+		num /= 10;
+	} while(num > 0);
+
+	if(negative) {charStr[i++] = '-';}
+
+	charStr[i--] = '\0';
+
+	for(uint64_t j = 0; j < i; j++, i--)
+	{
+		char   temp = charStr[i];
+		charStr[i] = charStr[j];
+		charStr[j] = temp;
+	}
 }
 
 void that_addString(const char* txt, ...)
@@ -37,6 +84,11 @@ void that_addString(const char* txt, ...)
 			i++;
 			switch(txt[i])
 			{
+                case 'c':
+                {
+                    charStr[0] = (char)va_arg(args, int);
+					break;
+                }
 				case 's':
 				{
 				    j = (i - 1);
@@ -50,6 +102,35 @@ void that_addString(const char* txt, ...)
                     }
 					break;
 				}
+				case 'd':
+				{
+					int32_t number = va_arg(args, int32_t);
+					printIntDigits(number);
+					break;
+				}
+                case 'b':
+				{
+					uint64_t bin = va_arg(args, uint64_t);
+					printUInt64Digits(bin, 2);
+					break;
+                }
+				case 'x':
+				{
+					uint64_t hex = va_arg(args, uint64_t);
+					printUInt64Digits(hex, 16);
+					break;
+				}
+				case 'l':
+				{
+					if(txt[i+1] == 'l' && txt[i+2] == 'u')
+					{
+						i+=2;
+                        uint64_t num = va_arg(args, uint64_t);
+						printUInt64Digits(num, 10);
+					}
+					break;
+				}
+
 			}
 		} else {
 		    if(txt[i] != '\n')
