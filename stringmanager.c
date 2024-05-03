@@ -11,56 +11,43 @@
 char* charStr             = NULL;
 char** strings            = NULL;
 unsigned int stringsIndex = 0;
+uint64_t                j = 0;
 
 unsigned int that_getTotalStrings()
 {
     return stringsIndex;
 }
 
-void printUInt64Digits(uint64_t num, uint64_t base)
+void printUInt64Digits(uint64_t num, uint64_t base, int numLength)
 {
 	const char* digits = "0123456789ABCDEF";
-	uint64_t i = 0;
+	uint64_t b = 0;
+	char tempChar[64] = {'\0'};
 
 	do
 	{
-		charStr[i++] = digits[num % base];
+		tempChar[b++] = digits[num % base];
         num /= base;
 	} while(num > 0);
 
-    charStr[i--] = '\0';
+    tempChar[b--] = '\0';
 
-	for(uint64_t j = 0; j < i; j++, i--)
+    int t = numLength + b;
+    charStr = realloc(charStr, sizeof(char) * t);
+
+	for(uint64_t a = 0; a < b; a++, b--)
 	{
-		char   temp = charStr[i];
-		charStr[i]  = charStr[j];
-		charStr[j]  = temp;
+		char  temp = tempChar[b];
+		tempChar[b] = tempChar[a];
+		tempChar[a] = temp;
 	}
-}
 
-void printIntDigits(int32_t num)
-{
-	const char* digits = "0123456789";
-	uint64_t i = 0;
-	int negative = (num < 0);
-	if(negative) {num = -num;}
-
-	do
-	{
-		charStr[i++] = digits[num % 10];
-		num /= 10;
-	} while(num > 0);
-
-	if(negative) {charStr[i++] = '-';}
-
-	charStr[i--] = '\0';
-
-	for(uint64_t j = 0; j < i; j++, i--)
-	{
-		char   temp = charStr[i];
-		charStr[i] = charStr[j];
-		charStr[j] = temp;
-	}
+    b = 0;
+    for(; j < t; j++, b++)
+    {
+        charStr[j] = tempChar[b];
+    }
+    j++;
 }
 
 void that_addString(const char* txt, ...)
@@ -74,8 +61,8 @@ void that_addString(const char* txt, ...)
 
 	va_list args;
 	va_start(args, txt);
-	uint64_t j = 0;
 	uint64_t i = 0;
+	j = 0;
 
 	for(; txt[i] != '\0'; i++)
 	{
@@ -86,7 +73,11 @@ void that_addString(const char* txt, ...)
 			{
                 case 'c':
                 {
-                    charStr[0] = (char)va_arg(args, int);
+                    j = (i - 1);
+                    char* varString = va_arg(args, char*);
+                    charStr = realloc(charStr, len + 1);
+                    charStr[j] = *varString;
+                    j++;
 					break;
                 }
 				case 's':
@@ -104,29 +95,66 @@ void that_addString(const char* txt, ...)
 				}
 				case 'd':
 				{
+				    j = (i - 1);
 					int32_t number = va_arg(args, int32_t);
-					printIntDigits(number);
-					break;
+
+                    const char* digits = "0123456789";
+
+                    char tempChar[11] = {'\0'};
+                    int negative = (number < 0);
+                    if(negative) {number = -number;}
+
+                    uint64_t b = 0;
+                    do
+                    {
+                        tempChar[b++] = digits[number % 10];
+                        number /= 10;
+                    } while(number > 0);
+
+                    if(negative) {tempChar[b++] = '-';}
+                    tempChar[b--] = '\0';
+
+                    int t = len + b;
+                    charStr = realloc(charStr, sizeof(char) * t);
+
+                    uint64_t a = 0;
+                    for(; a < b; a++, b--)
+                    {
+                        char  temp = tempChar[b];
+                        tempChar[b] = tempChar[a];
+                        tempChar[a] = temp;
+                    }
+
+                    b = 0;
+                    for(; j < t; j++, b++)
+                    {
+                        charStr[j] = tempChar[b];
+                    }
+                    j++;
+                    break;
 				}
                 case 'b':
 				{
+				    j = (i - 1);
 					uint64_t bin = va_arg(args, uint64_t);
-					printUInt64Digits(bin, 2);
+					printUInt64Digits(bin, 2, len);
 					break;
                 }
 				case 'x':
 				{
+				    j = (i - 1);
 					uint64_t hex = va_arg(args, uint64_t);
-					printUInt64Digits(hex, 16);
+					printUInt64Digits(hex, 16, len);
 					break;
 				}
 				case 'l':
 				{
+				    j = (i - 1);
 					if(txt[i+1] == 'l' && txt[i+2] == 'u')
 					{
 						i+=2;
                         uint64_t num = va_arg(args, uint64_t);
-						printUInt64Digits(num, 10);
+						printUInt64Digits(num, 10, len);
 					}
 					break;
 				}
@@ -179,7 +207,7 @@ void that_printAllStrings()
     printf("\n-------STRINGS LIST-----------\n");
     for(unsigned int t = 0; t < stringsIndex; t++)
     {
-        printf("DISPLAYING STRING : #%d - %s\n", t, strings[t]);
+        printf("DISPLAYING STRING -> #%d - %s\n", t, strings[t]);
     }
 }
 
