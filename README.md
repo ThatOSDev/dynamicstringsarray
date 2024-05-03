@@ -11,4 +11,4 @@ NOTE : Sadly I have to post this now on all my projects, since others are trying
 https://www.youtube.com/@ThatOSDev  
   
   
-![Current Progress](progress1.png)  
+![Current Progress](progress.png)  
