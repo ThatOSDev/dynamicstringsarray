@@ -5,7 +5,11 @@ I needed a way to add or delete a string from an array of strings for an up comi
   
 Variadic Functions are now working --> C, S, D, B, X, LLU --> See picture below to see it in action.  
   
+# ** TODO **  
+	* Add Floats to the Variadic Functions   
+	* Allow Multiple String Arrays  
     
+	
 # MY ONLY OFFICIAL YOUTUBE CHANNEL  
 NOTE : Sadly I have to post this now on all my projects, since others are trying to mimic my channel. They are using my logo, banner and videos to pretend to be me. So pay close attention to which youtube channel you are on.  
 https://www.youtube.com/@ThatOSDev  
