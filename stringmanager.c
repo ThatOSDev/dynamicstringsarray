@@ -17,6 +17,26 @@ unsigned int that_getTotalStrings()
 {
     return stringsIndex;
 }
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+void printDoubles(double doubleNum, int numLength)
+{
+    int floatLength = (size_t)snprintf(NULL, 0, "%.15lf", doubleNum) + 1;
+    char *str = NULL;
+    str = malloc(floatLength);
+    snprintf(str, floatLength, "%.15lf", doubleNum);
+    int t = numLength + floatLength;
+    charStr = realloc(charStr, sizeof(char) * t);
+    int b = 0;
+    for(; j < t; j++, b++)
+    {
+        charStr[j] = str[b];
+    }
+    free(str);
+    j++;
+}
 
 void printUInt64Digits(uint64_t num, uint64_t base, int numLength)
 {
@@ -155,7 +175,13 @@ void that_addString(const char* txt, ...)
 						i+=2;
                         uint64_t num = va_arg(args, uint64_t);
 						printUInt64Digits(num, 10, len);
-					}
+					} else if(txt[i+1] == 'f')
+                    {
+                        i++;
+                        double number = va_arg(args, double);
+                        printDoubles(number, len);
+                        break;
+                    }
 					break;
 				}
 
