@@ -4,7 +4,7 @@ I needed a way to add or delete a string from an array of strings for an up comi
   
 Variadic Functions are now working --> C, S, D, B, X, LLU, LF --> See picture below to see these in action.  
 
-NOTE : Long Floats are only accurate up to 15 Digits of precision. Example : 3.141592653589793 works. However if you change it to something like 53.141592653589793 then the 3 at the end is unstable and could result in a different number based on your Operating System and / or compiler.  
+NOTE : Long Floats are only accurate up to 15 Digits of precision. Example : 3.14159265358979 works. However if you change it to something like 53.14159265358979 then the 9 at the end is unstable and could result in a different number based on your Operating System and / or compiler.  
   
 # ** TODO **  
 	* Allow Multiple String Arrays  
