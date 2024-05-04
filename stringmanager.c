@@ -17,24 +17,27 @@ unsigned int that_getTotalStrings()
 {
     return stringsIndex;
 }
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 
 void printDoubles(double doubleNum, int numLength)
 {
     int floatLength = (size_t)snprintf(NULL, 0, "%.15lf", doubleNum) + 1;
-    char *str = NULL;
-    str = malloc(floatLength);
+    char str[20];
     snprintf(str, floatLength, "%.15lf", doubleNum);
-    int t = numLength + floatLength;
+    int removeZerosLen = 1;
+    for(int t = floatLength; t > 0; t--)
+    {
+        if(str[t] == '0')
+        {
+            removeZerosLen++;
+        }
+    }
+    str[floatLength - removeZerosLen] = '\0';
+    int t = (numLength + floatLength) - removeZerosLen;
     charStr = realloc(charStr, sizeof(char) * t);
-    int b = 0;
-    for(; j < t; j++, b++)
+    for(int b = 0; j < t; j++, b++)
     {
         charStr[j] = str[b];
     }
-    free(str);
     j++;
 }
 
