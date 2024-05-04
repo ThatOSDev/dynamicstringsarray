@@ -11,7 +11,7 @@ int main()
 
     that_addString("Digits       : %d", -64965);
 
-    that_addString("Long Doubles : %lf", 3.141592653589793); // Only works up to 15 Digits
+    that_addString("Long Doubles : %lf", 3.14159265358979); // Only works up to 15 Digits
 
     that_addString("Binary       : 0b%b", 65005);
 

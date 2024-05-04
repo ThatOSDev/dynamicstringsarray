@@ -22,17 +22,8 @@ void printDoubles(double doubleNum, int numLength)
 {
     int floatLength = (size_t)snprintf(NULL, 0, "%.15lf", doubleNum) + 1;
     char str[20];
-    snprintf(str, floatLength, "%.15lf", doubleNum);
-    int removeZerosLen = 1;
-    for(int t = floatLength; t > 0; t--)
-    {
-        if(str[t] == '0')
-        {
-            removeZerosLen++;
-        }
-    }
-    str[floatLength - removeZerosLen] = '\0';
-    int t = (numLength + floatLength) - removeZerosLen;
+    snprintf(str, floatLength, "%.15g", doubleNum);
+    int t = (numLength + floatLength);
     charStr = realloc(charStr, sizeof(char) * t);
     for(int b = 0; j < t; j++, b++)
     {
