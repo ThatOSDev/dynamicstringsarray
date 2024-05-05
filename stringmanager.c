@@ -304,6 +304,7 @@ void that_cleanupStrings() // Cleans out the strings.
 
     printf("\nFREEING strings\n");
     free(strings);
+    free(charStr);
 }
 
 
